@@ -22,50 +22,52 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <form role="form">
-                        <div class="form-group">
-                            <label for="inputName">
-                                Имя
-                            </label>
-                            <input type="text" placeholder="Иван" pattern="^[A-Za-zА-Яа-яЁё]+$" class="form-control" id="inputName"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputSurname">
-                                Фамилия
-                            </label>
-                            <input type="text" placeholder="Иванов" pattern="^[A-Za-zА-Яа-яЁё]+$" class="form-control" id="inputSurname"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputEmail">
-                                Email
-                            </label>
-                            <input type="email" class="form-control" placeholder="ivanov123@gmail.com" pattern="([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})" id="inputEmail" />
-                        </div>
-                        <div class="form-group">
-                            <label for="inputTel">
-                                Номер телефона
-                            </label>
-                            <input type="tel" name="tel" placeholder="89009009090" pattern="8[0-9]{10}" class="form-control" id="inputTel"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword1">
-                                Пароль (должен содержать не менее 8 символов, цифры, латинские буквы нижнего и верхнего регистра)
-                            </label>
-                            <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="inputPassword1"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPhoto">
-                                Выберите фото
-                            </label>
-                            <input type="file" class="form-control-file" id="inputPhoto"/>
-                            <p class="help-block">
-                                Ваша фотография
-                            </p>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            Зарегистрироваться
-                        </button>
-                    </form>
+                    <article class="card-body mx-auto" style="max-width: 1000px">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="inputName">
+                                    Имя
+                                </label>
+                                <input required type="text" title="Буквы русского и латинского алфавита" placeholder="Иван" pattern="^[A-Za-zА-Яа-яЁё]+$" class="form-control" id="inputName"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputSurname">
+                                    Фамилия
+                                </label>
+                                <input required type="text" title="Буквы русского и латинского алфавита" placeholder="Иванов" pattern="^[A-Za-zА-Яа-яЁё]+$" class="form-control" id="inputSurname"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail">
+                                    Email
+                                </label>
+                                <input required type="email" title="example@mail.com" class="form-control" placeholder="ivanov123@gmail.com" pattern="([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})" id="inputEmail" />
+                            </div>
+                            <div class="form-group">
+                                <label for="inputTel">
+                                    Номер телефона
+                                </label>
+                                <input required title="8xxxxxxxxxx" type="tel" name="tel" placeholder="89009009090" pattern="8[0-9]{10}" class="form-control" id="inputTel"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword1">
+                                    Пароль
+                                </label>
+                                <input required title="Пароль должен содержать не менее 8 символов, цифры, латинские буквы нижнего и верхнего регистра" type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="inputPassword1"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPhoto">
+                                    Выберите фото
+                                </label>
+                                <input type="file" class="form-control-file" id="inputPhoto"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                Зарегистрироваться
+                            </button>
+                        </form>
+                        <p class="text-center my-4">Есть аккаунт?
+                            <a href="">Войти</a>
+                        </p>
+                    </article>
                 </div>
             </div>
         </div>
