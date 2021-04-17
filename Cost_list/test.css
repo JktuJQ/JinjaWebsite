@@ -1,4 +1,4 @@
-.container-m {
+﻿.container-m {
   width: 100%;
   max-width: 1024px;
   min-width: 960px;
@@ -44,7 +44,7 @@
 	text-shadow: 1px 1px #bbb;
 }
 .rating-result > span:before {
-	content: '*';
+	content: '★';
 }
 .rating-result > span.active {
 	color: gold;
