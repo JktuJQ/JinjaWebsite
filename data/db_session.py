@@ -1,35 +1,62 @@
-# Import sqlalchemy
+# Import
+from declarations import *
+
 import sqlalchemy as sa
+from sqlalchemy.engine.mock import MockConnection
 from sqlalchemy.orm import Session
-import sqlalchemy.ext.automap as automap
+from sqlalchemy.ext.automap import AutomapBase, automap_base
 
 
-SqlAlchemyBase: automap.AutomapBase = None
-current_session: Session = None
+__engines: Dict[str, MockConnection] = dict()
+databases: Dict[str, AutomapBase] = dict()
+sessions: Dict[str, Session] = dict()
 
 
-def global_init(db_file: str = r"data\databases\main_database.sqlite") -> None:
-    global current_session, SqlAlchemyBase
+def global_init(db_files: List[str]):
+    """Invokes engine_init, database_init, sessions_init with pre-defined value db_names (declarations.py)."""
 
-    if current_session:
-        return
-    if not db_file:
-        raise NameError("Необходимо указать файл базы данных.")
+    engines_init(db_files)
 
-    conn_str = f"sqlite:///{db_file}?check_same_thread=False"
+    names = list(__engines.keys())
 
-    engine = sa.create_engine(conn_str)
-
-    metadata = sa.MetaData()
-    metadata.reflect(engine, only=['user', 'service', 'comment', 'status'])
-
-    SqlAlchemyBase = automap.automap_base(metadata=metadata)
-    SqlAlchemyBase.prepare()
-    SqlAlchemyBase.metadata.create_all(engine)
-
-    current_session = Session(engine)
+    databases_init(names)
+    sessions_init(names)
 
 
-def get_session() -> Session:
-    global current_session
-    return current_session
+def engines_init(db_files: List[str]) -> None:
+    """Initializes all engines. Other functions (except for global_init) won't work without it."""
+
+    global __engines
+
+    if not db_files:
+        raise NameError("No db files found")
+
+    for db_file in db_files:
+        database_name = f"sqlite:///{db_file}?check_same_thread=False"
+
+        name = db_file.split("\\")[-1].split(".")[0]
+
+        __engines[name] = sa.create_engine(database_name)
+
+
+def databases_init(db_names: List[str]):
+    """Initializes all databases."""
+
+    global databases
+
+    for name in db_names:
+        metadata = sa.MetaData()
+        metadata.reflect(__engines[name])
+
+        databases[name] = automap_base(metadata=metadata)
+        databases[name].prepare()
+        databases[name].metadata.create_all(__engines[name])
+
+
+def sessions_init(db_names: List[str]):
+    """Initializes all sessions."""
+
+    global sessions
+
+    for name in db_names:
+        sessions[name] = Session(__engines[name])

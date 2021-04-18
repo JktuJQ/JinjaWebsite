@@ -1,10 +1,15 @@
 # Imports
 from declarations import *
 
-from .db_session import SqlAlchemyBase
+from .db_session import databases
 
 
-Service = SqlAlchemyBase.classes.service
-User = SqlAlchemyBase.classes.user
-Comment = SqlAlchemyBase.classes.comment
-Status = SqlAlchemyBase.classes.status
+# main_database.sqlite
+database = databases["main_database"].classes
+
+User = database.user
+Service = database.service
+Comment = database.comment
+Description = database.description
+Images = database.images
+Status = database.status
