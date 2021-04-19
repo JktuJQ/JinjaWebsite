@@ -1,17 +1,50 @@
 from declarations import *
-from application import application, redirect, render_template, jsonify
+from application import application, redirect, render_template, jsonify, request
 
 
 @application.route('/', methods=["GET"])
 def home():
     """Website home page"""
-    return ""
+
+    session = sessions["main_database"]
+
+    services = session.query(Service).all()
+
+    data = {
+        "services": []
+    }
+
+    for service in services:
+
+        description = session.query(Description).filter(Description.id == service.description_id).first()
+        images = session.query(Images).filter(Images.id == description.images_id).all()
+
+        service_comments = session.query(Comment)\
+            .filter((Comment.service_id == service.id)).all()
+
+        data["services"].append({
+            "id": service.id,
+            "name": service.name,
+            "price": service.price,
+            "description": {
+                "images": [image.image for image in images],
+                "description": description.description,
+            },
+            "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
+        })
+
+    return render_template("base.html", data=jsonify(data))
 
 
-@application.route('/registration', methods=["GET"])
+@application.route('/registration', methods=["GET", "POST"])
 def registration():
     """Website registration page"""
-    return open(r"templates\registration.html", encoding="utf8").read()
+
+    if request.method == "GET":
+        return render_template("rewiew.html")
+
+    elif request.method == "POST":
+        pass
 
 
 @application.route('/register')
@@ -53,14 +86,16 @@ def service(service_id: int):
                 "images": [image.image for image in service_description_images],
                 "description": service_description.description,
             },
-            "comments": {}
-        },
+            "comments": []
+        }
     }
+
     average_rating = 0
+
     for comment, description in service_comments:
-        print(description)
         author = session.query(User).filter(User.id == comment.user_id).first()
-        data["service"]["comments"][comment.id] = {
+        data["service"]["comments"].append({
+            "id": comment.id,
             "author": {
                 "id": author.id,
                 "name": author.name,
@@ -71,7 +106,7 @@ def service(service_id: int):
                 "description": description.description
             },
             "rating": comment.rating
-        }
+        })
         average_rating += comment.rating
     data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"].keys())
 
