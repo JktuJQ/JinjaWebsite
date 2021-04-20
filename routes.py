@@ -17,7 +17,7 @@ def home():
     for service in services:
 
         description = session.query(Description).filter(Description.id == service.description_id).first()
-        images = session.query(Images).filter(Images.id == description.images_id).all()
+        images = session.query(Images).filter(Images.out_id == description.images_id).all()
 
         service_comments = session.query(Comment)\
             .filter((Comment.service_id == service.id)).all()
@@ -36,12 +36,23 @@ def home():
     return render_template("base.html", data=data, len=len, round=round)
 
 
+@application.route('/review', methods=["GET", "POST"])
+def review():
+
+    if request.method == "GET":
+        return render_template("review.html")
+
+    elif request.method == "POST":
+        print(request.form["rating"])
+        return redirect('/')
+
+
 @application.route('/registration', methods=["GET", "POST"])
 def registration():
     """Website registration page"""
 
     if request.method == "GET":
-        return render_template("rewiew.html")
+        return render_template("registration.html")
 
     elif request.method == "POST":
         pass
@@ -65,7 +76,7 @@ def service(service_id: int):
     service_description = session.query(Description)\
         .filter(Description.id == service.description_id).first()
     service_description_images = session.query(Images)\
-        .filter(Images.id == service_description.images_id).all()
+        .filter(Images.out_id == service_description.images_id).all()
 
     service_comments = session.query(Comment, Description)\
         .filter((Comment.service_id == service.id), (Description.id == Comment.description_id)).all()
