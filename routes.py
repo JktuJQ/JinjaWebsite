@@ -1,5 +1,5 @@
 from declarations import *
-from application import application, redirect, render_template, jsonify, request
+from application import application, redirect, render_template, request
 
 
 @application.route('/', methods=["GET"])
@@ -33,7 +33,7 @@ def home():
             "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
         })
 
-    return render_template("base.html", data=jsonify(data))
+    return render_template("base.html", data=data, len=len, round=round)
 
 
 @application.route('/registration', methods=["GET", "POST"])
@@ -108,6 +108,6 @@ def service(service_id: int):
             "rating": comment.rating
         })
         average_rating += comment.rating
-    data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"].keys())
+    data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"])
 
-    return render_template("service.html", data=jsonify(data))
+    return render_template("service.html", data=data)

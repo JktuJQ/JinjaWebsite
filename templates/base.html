@@ -7,7 +7,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="test.css">
+    <link rel="stylesheet" type="text/css" href={{url_for('static', filename='css/main.css') }}
     <title>Zhinja</title>
 </head>
 <body>
@@ -124,7 +124,7 @@
                 </div>
             </div>
         </div>
-        {% for item in data['ad'] %}
+        {% for item in data['services'] %}
         <div class="row">
             <div class="col-1-3-cars">
                 <div id="sliderInner" class="carousel slide" data-ride="false">
@@ -163,10 +163,10 @@
                 <a href="http://site.ru"><h3>{{item["name"]}}</h3></a>
                 <p>Рейтинг продавца:</p>
                 <div class="rating-result">
-                    {% for i in range(item["rating"]) %}
+                    {% for i in range(round(item["average_rating"])) %}
                     <span class="active"></span>
                     {% endfor %}
-                    {% for i in range(5 - item["rating"]) %}
+                    {% for i in range(5 - round(item["average_rating"])) %}
                     <span></span>
                     {% endfor %}
                 </div>
@@ -189,7 +189,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                {% for item in data['ad'] %}
+                {% for item in data['services'] %}
                 <div class="row">
                     <div class="col34">
                         <div id="sliderInner1" class="carousel slide" data-ride="false">
@@ -228,10 +228,10 @@
                         <a href="http://site.ru"><h3>{{item["name"]}}</h3></a>
                         <p>Рейтинг продавца:</p>
                         <div class="rating-result">
-                            {% for i in range(item["rating"]) %}
+                            {% for i in range(round(item["average_rating"])) %}
                             <span class="active"></span>
                             {% endfor %}
-                            {% for i in range(5 - item["rating"]) %}
+                            {% for i in range(5 - round(item["average_rating"])) %}
                             <span></span>
                             {% endfor %}
                         </div>
