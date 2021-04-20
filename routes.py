@@ -27,7 +27,7 @@ def base():
             "name": service.name,
             "price": service.price,
             "description": {
-                "images": [image.image for image in images],
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
                 "description": description.description,
             },
             "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
@@ -50,6 +50,8 @@ def service(service_id: int):
 
     service_author = session.query(User)\
         .filter(User.id == service.user_id).first()
+    service_author_image = session.query(Images)\
+        .filter(Images.out_id == service_author.image_id).first()
 
     service_description = session.query(Description)\
         .filter(Description.id == service.description_id).first()
@@ -64,7 +66,7 @@ def service(service_id: int):
             "author": {
                 "id": service_author.id,
                 "name": service_author.name,
-                "image": service_author.image,
+                "image": str(buffer_image(service_author_image.id, service_author_image.image)) + ".png",
                 "phone": service_author.phone,
                 "average_rating": 0
             },
@@ -72,7 +74,7 @@ def service(service_id: int):
             "name": service.name,
             "price": service.price,
             "description": {
-                "images": [image.image for image in service_description_images],
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in service_description_images],
                 "description": service_description.description,
             },
             "comments": []
@@ -83,15 +85,16 @@ def service(service_id: int):
 
     for comment, description in service_comments:
         author = session.query(User).filter(User.id == comment.user_id).first()
+        author_image = session.query(Images).filter(Images.out_id == author.image_id).first()
         data["service"]["comments"].append({
             "id": comment.id,
             "author": {
                 "id": author.id,
                 "name": author.name,
-                "image": author.image
+                "image": str(buffer_image(author_image.id, author_image.image)) + ".png"
             },
             "description": {
-                "images": [image.image for image in session.query(Images).filter(Images.id == description.images_id).all()],
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in session.query(Images).filter(Images.id == description.images_id).all()],
                 "description": description.description
             },
             "rating": comment.rating
@@ -146,7 +149,7 @@ def create_service():
 def create_comment(service_id: int):
 
     if request.method == "GET":
-        return render_template("comment.html")
+        return render_template("create_comment.html")
 
     elif request.method == "POST":
         print(request.form["rating"])
