@@ -1,9 +1,9 @@
 from declarations import *
-from application import application, redirect, render_template, request
+from application import application, redirect, render_template, request, cookie
 
 
 @application.route('/', methods=["GET"])
-def home():
+def base():
     """Website home page"""
 
     session = sessions["main_database"]
@@ -36,31 +36,9 @@ def home():
     return render_template("base.html", data=data, len=len, round=round)
 
 
-@application.route('/review', methods=["GET", "POST"])
-def review():
-
-    if request.method == "GET":
-        return render_template("review.html")
-
-    elif request.method == "POST":
-        print(request.form["rating"])
-        return redirect('/')
-
-
-@application.route('/registration', methods=["GET", "POST"])
-def registration():
-    """Website registration page"""
-
-    if request.method == "GET":
-        return render_template("registration.html")
-
-    elif request.method == "POST":
-        pass
-
-
-@application.route('/register')
-def register():
-    return "success"
+@application.route('/profile/<int:user_id>', methods=["GET"])
+def profile(user_id: int):
+    return render_template("profile.html")
 
 
 @application.route('/service/<int:service_id>', methods=["GET"])
@@ -122,3 +100,54 @@ def service(service_id: int):
     data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"])
 
     return render_template("service.html", data=data)
+
+
+@application.route('/registration', methods=["GET", "POST"])
+def registration():
+    """Website registration page"""
+
+    if request.method == "GET":
+        return render_template("registration.html")
+
+    elif request.method == "POST":
+        phone = request.form.get("phone")
+        name = " ".join([request.form.get("surname"), request.form.get("name")])
+        password = request.form.get("password")
+        image = str(request.files["file"].read())
+
+        try:
+            session = sessions["main_database"]
+            user = User(phone=phone, password=password, name=name, image=image)
+            user_id = user.id
+            user_hash = hash((phone, password))
+            session.add(user)
+            session.commit()
+        except Exception:
+            # TODO alarm box
+            return redirect('/registration')
+
+        cookie["id"] = user_id
+        cookie["hash"] = user_hash
+
+        return redirect('/')
+
+
+@application.route('/create_service', methods=["GET", "POST"])
+def create_service():
+
+    if request.method == "GET":
+        return render_template("create_service.html")
+
+    elif request.method == "POST":
+        pass
+
+
+@application.route('/comment/<int:service_id>', methods=["GET", "POST"])
+def create_comment(service_id: int):
+
+    if request.method == "GET":
+        return render_template("comment.html")
+
+    elif request.method == "POST":
+        print(request.form["rating"])
+        return redirect('/')

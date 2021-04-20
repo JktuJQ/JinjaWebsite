@@ -11,9 +11,9 @@ INSERT INTO description VALUES (1, 'description2', 1);
 INSERT INTO description VALUES (2, 'description3', 2);
 
 -- Users
-INSERT INTO user VALUES (0, 0, '08005553535', 'password0', 'user0', 'icon0', 0);
-INSERT INTO user VALUES (1, 1, '18005553535', 'password1', 'user1', 'icon1', 1);
-INSERT INTO user VALUES (2, 2, '28005553535', 'password2', 'user2', 'icon2', 2);
+INSERT INTO user VALUES (0, 0, '08005553535', 'password0', 'user0', 'icon0');
+INSERT INTO user VALUES (1, 1, '18005553535', 'password1', 'user1', 'icon1');
+INSERT INTO user VALUES (2, 2, '28005553535', 'password2', 'user2', 'icon2');
 
 -- Services
 INSERT INTO service VALUES (0, 0, 'service0', 0, 1.01);

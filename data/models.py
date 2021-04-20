@@ -9,7 +9,7 @@ database = databases["main_database"].classes
 
 User = database.user
 Service = database.service
-Comment = database.comment
+Comment = database.create_comment
 Description = database.description
 Images = database.images
 Status = database.status

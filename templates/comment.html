@@ -6,113 +6,52 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+        <link rel="stylesheet" type="text/css" href={{ url_for("static", filename="css/main.css") }}>
         <title>Отзыв</title>
-    <script type="text/javascript" src="/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=v5ispRs5nNm7Rkif-4dWMEzHIlb0IDr1P0y4yVO-k9Zqv4NEBUOUpYMOctzbFu-_pgtOt6FUGAnH229M644m4C4GOT-4_wbsUbkekZy9a17r88NkuLx8yt8dykPNhNWGv_-BYAatpN1Pyg1JHk4MdST4i8Rcuv8NXX5rPUEskrJoenrMktWnRLt2xf_ZEHntv1a4BEeVqh1bLCxZiO_ODLbg2AK2M1pRN1oDD23UlFjeRXx_OyQCsa246kd-m1KnKpedNqV5wBjQBsotgbgBoj7EfIl-3YXz5QQYXFXBsmq5gnXeRkZFDxU2e4JP6vtLiHP_hWZehR_gOpO7fWx6nYrhgblMCxeo-Rp2GWFjoC9HQC6DWmoZZiFFNLujG0upQxUM9hVqr9BBcinIvLqHCTkvg6awihTIZAeHK7xvDMp9fDqIPocF91i_mqkFoIidFCTc8whP7JtMOI3uUTHAiW2wfo03HXfFbZhaL73Xz9RRPKM77TtxhlOtnKAGuaaIwElk86lfE6M3nlm_DBv40oex8cF9y5Y63uxOYzWerGvzXp07XBUp-Zy78kRAofuuTqhOXExr6KIzWN5pAPu8-KEOoFltZe-EZY4S2J7NCIpUlcmzE_4wQRmPB5P4QsWEP9FLlSzHt5o-PMI3y7dy5Q" charset="UTF-8"></script>
-    </head>
+   </head>
     <body>
-        <div class="comments">
-            <h3 class="title-comments">
-                Отзывы:
-            </h3>
-            <ul class="media-list">
-                <li class="media mt-5">
-                    <div class="media-left text-center">
-                        <a href="#">
-                            <div class="author" style="max-width: 150px">
-                                <h3>Королевский Конь</h3>
-                            </div>
-                            <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="../new_profile_form/royal.png">
-                        </a>
-                    </div>
-                    <div class="media-body ml-5 mr-5">
-                        <div class="media-left">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h2>Отличная услуга!</h2>
-                                </div>
-                                <div class="col-4">
-                                    <div class="rating-result">
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="container-12 mx-auto" style="max-width: 1000px">
+            <div class="row">
+                <div class="col">
+                    <form method="post">
+                        <div class="group-form text-center">
+                            <h1>
+                                Написание отзыва
+                            </h1>
                         </div>
-                        <div class="media-text col-12 text-justify">
-                            <h3 class="my-2">
-                                Достоинства:
-                            </h3>
-                            <p>
-                                Вообще оперативка довольно хорошая но есть одно но...На сколько я понял по комментариям % брака довольно большой с предидущей мне повезло ,а вот через пол года попался брак.Жду обмен на ту же самую модель ток сдал назад еще ~ 2 недели.
-                            </p>
-                            <h3 class="my-2">
-                                Недостатки:
-                            </h3>
-                            <p>
-                                Почему-то именно у оперативок AMD самый большой процент брака, в последней закупке из 8 планок по 8 гб 6 сдал назад по браку. До этого было два случая с планками на 4 Гб. С теми же KINGSTON никогда такого не было, а закупаюсь я, уже поверьте, нормальным количеством комплектующих
-                            </p>
-                            <h3 class="my-2">
-                                Комментарий:
-                            </h3>
-                            <p>
-                                Я сборщик студент, который этим занимается как хобби До майнинга делал сборки из частично бу/уценных комплектух и оочень часто брал эти планки, больше 15 точно так как 95% моих сборок были на амудэ, память естественно гнал 3333 16 19 16 16 36 не особо заморачиваясь было максимум, что весьма неплохо, но вот после пары месяц перерыва мне поступил заказ на сборку двух офисных пк, в каждый из которых я поставил по 2 планки этой прекрасной озу, занизил тайминги до сл15 оставив частоту 2666 (мать х410) все гуд (ну почти, одна из плашек попалась старой ревизии, в более толстой упаковке, в цпу з определялась как nany/amd а вторая amd/amd и эта система взяла сл14, хотя все остальное было идентично) клиенту все понравилось, ничего не вылетало, в общем два компа и 4 планки ушли работать спустя неделю похожий заказ, но один комп который я решил собрать на атлон 3000г и б450 про4ф без задней мысли покупаю очередные две планки, все собираю и... черный экран методом тыка понимаю что ничего не грузит (даже клава светится не начинает) из за одной планки озу, если она вставлена с рабочей, с которой все норм брак бывает у меня редко, но я не особо удивился, пришел в днс в тандеме где брал и мне все поменяли на месте, без отправки меня на другой конец города на проверку качества, за что консультантам спасибо (ну я тоже не пальцем деланный, все на видео записываю и доки сохраняю) обменяли мне значит одну планку на другую прихожу - та же картинка я уже и биос сбрасывал и обновлял и с бубном танцевал - не стартует с другой планкой даже на моем основном пк прихожу снова, несколько минут и возвращаюсь домой с уже дважды поменяной на новую планку озу Я был немного удивлен, когда третья из четырех планок озу показывала те же симптомы я конечно не компьютерный мастер с 30ти летнем стажем в объявлениях сами знаете где, но чуть больше двух лет постоянных сборок и разгона разных комплектующих дают свои плоды, так что перепроверив еще раз свою криворукость, убедившись что в этот раз не она виновата, отправился в днс с другой целью - обменом обеих плашек на что то в наличии, ибо сроки горели просто борода доплатив по 250 за планку взял что было из более менее в наличии - самсы оем 2933 итог - то ли партия бракованная, то ли че - покупайте с осторожностью p.s. гнаться стали сильно хуже чем раньше, я бы сейчас брал крушиал на d-die либо e-die которые идут 3200 сл22 ну или те же самсунг как будет не лень, прикреплю несколько фото с пруфами
-                            </p>
+                        <div class="group-form my-3">
+                            <label for="overallImpression">Общее впечатление (не более 10 Слов)</label>
+                            <input required type="text" class="form-control" placeholder="Например: Отличная услуга!" id="overallImpression" name="impression">
                         </div>
-                    </div>
-                </li>
-                <li class="media mt-5">
-                    <div class="media-left text-center">
-                        <a href="#">
-                            <div class="author" style="max-width: 150px">
-                                <h3>Королевский Конь</h3>
-                            </div>
-                            <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="../new_profile_form/royal.png">
-                        </a>
-                    </div>
-                    <div class="media-body ml-5 mr-5">
-                        <div class="media-left">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h2>Отличная услуга!</h2>
-                                </div>
-                                <div class="col-4">
-                                    <div class="rating-result">
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="group-form my-3">
+                            <label for="pluses">Достоинства</label>
+                            <textarea required rows="5" class="form-control" id="pluses" name="pluses"></textarea>
                         </div>
-                        <div class="media-text col-12 text-justify">
-                            <h3 class="my-2">
-                                Достоинства:
-                            </h3>
-                            <p>
-                                Вообще оперативка довольно хорошая но есть одно но...На сколько я понял по комментариям % брака довольно большой с предидущей мне повезло ,а вот через пол года попался брак.Жду обмен на ту же самую модель ток сдал назад еще ~ 2 недели.
-                            </p>
-                            <h3 class="my-2">
-                                Недостатки:
-                            </h3>
-                            <p>
-                                Почему-то именно у оперативок AMD самый большой процент брака, в последней закупке из 8 планок по 8 гб 6 сдал назад по браку. До этого было два случая с планками на 4 Гб. С теми же KINGSTON никогда такого не было, а закупаюсь я, уже поверьте, нормальным количеством комплектующих
-                            </p>
-                            <h3 class="my-2">
-                                Комментарий:
-                            </h3>
-                            <p>
-                                Я сборщик студент, который этим занимается как хобби До майнинга делал сборки из частично бу/уценных комплектух и оочень часто брал эти планки, больше 15 точно так как 95% моих сборок были на амудэ, память естественно гнал 3333 16 19 16 16 36 не особо заморачиваясь было максимум, что весьма неплохо, но вот после пары месяц перерыва мне поступил заказ на сборку двух офисных пк, в каждый из которых я поставил по 2 планки этой прекрасной озу, занизил тайминги до сл15 оставив частоту 2666 (мать х410) все гуд (ну почти, одна из плашек попалась старой ревизии, в более толстой упаковке, в цпу з определялась как nany/amd а вторая amd/amd и эта система взяла сл14, хотя все остальное было идентично) клиенту все понравилось, ничего не вылетало, в общем два компа и 4 планки ушли работать спустя неделю похожий заказ, но один комп который я решил собрать на атлон 3000г и б450 про4ф без задней мысли покупаю очередные две планки, все собираю и... черный экран методом тыка понимаю что ничего не грузит (даже клава светится не начинает) из за одной планки озу, если она вставлена с рабочей, с которой все норм брак бывает у меня редко, но я не особо удивился, пришел в днс в тандеме где брал и мне все поменяли на месте, без отправки меня на другой конец города на проверку качества, за что консультантам спасибо (ну я тоже не пальцем деланный, все на видео записываю и доки сохраняю) обменяли мне значит одну планку на другую прихожу - та же картинка я уже и биос сбрасывал и обновлял и с бубном танцевал - не стартует с другой планкой даже на моем основном пк прихожу снова, несколько минут и возвращаюсь домой с уже дважды поменяной на новую планку озу Я был немного удивлен, когда третья из четырех планок озу показывала те же симптомы я конечно не компьютерный мастер с 30ти летнем стажем в объявлениях сами знаете где, но чуть больше двух лет постоянных сборок и разгона разных комплектующих дают свои плоды, так что перепроверив еще раз свою криворукость, убедившись что в этот раз не она виновата, отправился в днс с другой целью - обменом обеих плашек на что то в наличии, ибо сроки горели просто борода доплатив по 250 за планку взял что было из более менее в наличии - самсы оем 2933 итог - то ли партия бракованная, то ли че - покупайте с осторожностью p.s. гнаться стали сильно хуже чем раньше, я бы сейчас брал крушиал на d-die либо e-die которые идут 3200 сл22 ну или те же самсунг как будет не лень, прикреплю несколько фото с пруфами
-                            </p>
+                        <div class="group-form my-3">
+                            <label for="minuses">Недостатки</label>
+                            <textarea required rows="5" class="form-control" id="minuses" name="minuses"></textarea>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                        <div class="group-form my-3">
+                            <label for="comment">Комментарий</label>
+                            <textarea required rows="5" class="form-control" id="comment" name="comment"></textarea>
+                        </div>
+                        <div class="rating-area">
+                            <input type="radio" id="star-5" name="rating" value="5">
+                            <label for="star-5"></label>
+                            <input type="radio" id="star-4" name="rating" value="4">
+                            <label for="star-4"></label>
+                            <input type="radio" id="star-3" name="rating" value="3">
+                            <label for="star-3"></label>
+                            <input type="radio" id="star-2" name="rating" value="2">
+                            <label for="star-2"></label>
+                            <input type="radio" id="star-1" name="rating" value="1">
+                            <label for="star-1"></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block my-3">
+                            Оставить отзыв
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </body>
-</html>

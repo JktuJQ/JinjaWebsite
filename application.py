@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, jsonify, request
+from flask import Flask, render_template, redirect, request, session as cookie
 
 
 application = Flask(__name__)
