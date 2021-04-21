@@ -28,7 +28,12 @@ def base():
             "price": service.price,
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
-                "description": description.description,
+                "description": {
+                    "impression": description.description.split(delimiter)[0],
+                    "pluses": description.description.split(delimiter)[1],
+                    "minuses": description.description.split(delimiter)[2],
+                    "comment": description.description.split(delimiter)[3]
+                },
             },
             "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
         })
@@ -76,7 +81,12 @@ def service(service_id: int):
             "price": service.price,
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in service_description_images],
-                "description": service_description.description,
+                "description": {
+                    "impression": service_description.description.split(delimiter)[0],
+                    "pluses": service_description.description.split(delimiter)[1],
+                    "minuses": service_description.description.split(delimiter)[2],
+                    "comment": service_description.description.split(delimiter)[3]
+                },
             },
             "comments": []
         }
@@ -96,7 +106,12 @@ def service(service_id: int):
             },
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in session.query(Images).filter(Images.id == description.images_id).all()],
-                "description": description.description
+                "description": {
+                    "impression": description.description.split(delimiter)[0],
+                    "pluses": description.description.split(delimiter)[1],
+                    "minuses": description.description.split(delimiter)[2],
+                    "comment": description.description.split(delimiter)[3]
+                }
             },
             "rating": comment.rating
         })
