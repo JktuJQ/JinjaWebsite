@@ -71,6 +71,7 @@ def service(service_id: int):
                 "average_rating": 0
             },
 
+            "id": service.id,
             "name": service.name,
             "price": service.price,
             "description": {
@@ -142,7 +143,34 @@ def create_service():
         return render_template("create_service.html")
 
     elif request.method == "POST":
-        pass
+
+        title = request.form.get("title")
+        image = request.files.get("photo")
+        description = request.form.get("description")
+        price = request.form.get("price")
+
+        try:
+
+            session = sessions["main_database"]
+
+            user_id = cookie["id"]
+
+            last_out_id = max([image.out_id for image in session.query(Images).all()]) + 1
+
+            image = Images(out_id=last_out_id, image=bytes(image.read()))
+            description = Description(description=description, images_id=image.out_id)
+            service = Service(user_id=user_id, name=title, description_id=description.id, price=price)
+
+            session.add(image)
+            session.add(description)
+            session.add(service)
+
+            session.commit()
+
+        except Exception:
+            return redirect('/')
+
+        return redirect('/')
 
 
 @application.route('/comment/<int:service_id>', methods=["GET", "POST"])
@@ -153,8 +181,25 @@ def create_comment(service_id: int):
 
     elif request.method == "POST":
 
+        impression = request.form.get("impression")
+        pluses = request.form.get("pluses")
+        minuses = request.form.get("minuses")
+        comment = request.form.get("comment")
+        rating = request.form.get("rating")
+
         try:
             session = sessions["main_database"]
+
+            user_id = cookie["id"]
+
+            description = Description(description=delimiter.join((impression, pluses, minuses, comment)))
+            comment = Comment(user_id=user_id, service_id=service_id, description_id=description.id, rating=rating)
+
+            session.add(description)
+            session.add(comment)
+
+            session.commit()
+
         except Exception:
             return redirect('/')
 

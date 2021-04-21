@@ -1,5 +1,9 @@
 from typing import *
 
+
+delimiter = "{|delimiter|}"
+
+# Image converting
 from io import BytesIO
 from PIL import Image
 
