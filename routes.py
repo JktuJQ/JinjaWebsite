@@ -152,5 +152,10 @@ def create_comment(service_id: int):
         return render_template("create_comment.html")
 
     elif request.method == "POST":
-        print(request.form["rating"])
+
+        try:
+            session = sessions["main_database"]
+        except Exception:
+            return redirect('/')
+
         return redirect('/')
