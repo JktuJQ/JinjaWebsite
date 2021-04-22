@@ -2,24 +2,38 @@ from declarations import *
 from application import application, redirect, render_template, request, cookie
 
 
-@application.route('/', methods=["GET"])
+@application.route('/', methods=["GET", "POST"])
 def base():
     """Website home page"""
+
+    global searcher
 
     session = sessions["main_database"]
 
     services = session.query(Service).all()
+
+    searched = request.form.get("search")
+    if searched:
+        reload_document(services)
+
+        searcher = ix.searcher()
+        query = QueryParser("content", ix.schema).parse(searched)
+        search_result = list(searcher.search(query))
+        if not search_result:
+            services = list(filter(lambda x: searched in x.name, services))
+        else:
+            services_id = [int(hit["id"]) for hit in search_result]
+            services = list(filter(lambda x: x.id in services_id, services))
 
     data = {
         "services": []
     }
 
     for service in services:
-
         description = session.query(Description).filter(Description.id == service.description_id).first()
         images = session.query(Images).filter(Images.out_id == description.images_id).all()
 
-        service_comments = session.query(Comment)\
+        service_comments = session.query(Comment) \
             .filter((Comment.service_id == service.id)).all()
 
         data["services"].append({
@@ -125,20 +139,20 @@ def profile(user_id: int, type: str = "services"):
 def service(service_id: int):
     session = sessions["main_database"]
 
-    service = session.query(Service)\
+    service = session.query(Service) \
         .filter(Service.id == service_id).first()
 
-    service_author = session.query(User)\
+    service_author = session.query(User) \
         .filter(User.id == service.user_id).first()
-    service_author_image = session.query(Images)\
+    service_author_image = session.query(Images) \
         .filter(Images.out_id == service_author.image_id).first()
 
-    service_description = session.query(Description)\
+    service_description = session.query(Description) \
         .filter(Description.id == service.description_id).first()
-    service_description_images = session.query(Images)\
+    service_description_images = session.query(Images) \
         .filter(Images.out_id == service_description.images_id).all()
 
-    service_comments = session.query(Comment, Description)\
+    service_comments = session.query(Comment, Description) \
         .filter((Comment.service_id == service.id), (Description.id == Comment.description_id)).all()
 
     data = {
@@ -180,7 +194,8 @@ def service(service_id: int):
                 "image": str(buffer_image(author_image.id, author_image.image)) + ".png"
             },
             "description": {
-                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in session.query(Images).filter(Images.id == description.images_id).all()],
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in
+                           session.query(Images).filter(Images.id == description.images_id).all()],
                 "description": {
                     "impression": description.description.split(delimiter)[0],
                     "pluses": description.description.split(delimiter)[1],
@@ -228,7 +243,6 @@ def registration():
 
 @application.route('/create_service', methods=["GET", "POST"])
 def create_service():
-
     if request.method == "GET":
         return render_template("create_service.html")
 
@@ -265,7 +279,6 @@ def create_service():
 
 @application.route('/create_comment/<int:service_id>', methods=["GET", "POST"])
 def create_comment(service_id: int):
-
     if request.method == "GET":
         return render_template("create_comment.html")
 
