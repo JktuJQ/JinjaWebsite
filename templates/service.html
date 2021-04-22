@@ -134,7 +134,7 @@
                     <div class="col-md-12">
                         <div class="carousel slide" id="serviceImages" data-ride="carousel">
                             <div class="carousel-inner">
-                                {% for image in data['service']['comments']['description']['images'] %}
+                                {% for image in data['service']['description']['images'] %}
                                     <div class="carousel-item active">
                                         <img class="d-block" alt="image" src="{{ url_for('static', filename='images/' + image) }}" />
                                     </div>
@@ -158,7 +158,7 @@
                                 </h2>
                             </dt>
                             <dd>
-                                {{ data["service"]["description"]["description"] }}
+                                {{ data["service"]["description"]["description"]["comment"] }}
                             </dd>
                         </dl>
                     </div>
@@ -242,7 +242,7 @@
                                 Позвонить {{ data["service"]["author"]["phone"] }}
                             </button>
                         </a>
-                        <a href='/comment/{{ data["service"]["id"] }}'>
+                        <a href='/create_comment/{{ data["service"]["id"] }}'>
                            <button type="button" class="btn btn-success btn-block my-3">
                                Написать отзыв
                            </button>

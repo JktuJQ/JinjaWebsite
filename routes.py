@@ -43,10 +43,7 @@ def base():
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
                 "description": {
-                    "impression": description.description.split(delimiter)[0],
-                    "pluses": description.description.split(delimiter)[1],
-                    "minuses": description.description.split(delimiter)[2],
-                    "comment": description.description.split(delimiter)[3]
+                    "comment": description.description
                 },
             },
             "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
@@ -92,10 +89,7 @@ def profile(user_id: int, type: str = "services"):
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
                 "description": {
-                    "impression": description.description.split(delimiter)[0],
-                    "pluses": description.description.split(delimiter)[1],
-                    "minuses": description.description.split(delimiter)[2],
-                    "comment": description.description.split(delimiter)[3]
+                    "comment": description.description
                 },
             },
         })
@@ -171,10 +165,7 @@ def service(service_id: int):
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in service_description_images],
                 "description": {
-                    "impression": service_description.description.split(delimiter)[0],
-                    "pluses": service_description.description.split(delimiter)[1],
-                    "minuses": service_description.description.split(delimiter)[2],
-                    "comment": service_description.description.split(delimiter)[3]
+                    "comment": service_description.description
                 },
             },
             "comments": []
