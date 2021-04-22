@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <title>Service creation form</title>
+</head>
+<body>
+    <div class="container-12 mx-auto" style="max-width: 1000px">
+        <form method="post" enctype="multipart/form-data">
+            <div class="group-form text-center">
+                <h1>
+                    Размещение объявления
+                </h1>
+            </div>
+            <div class="group-form my-3">
+                <label for="Title">Название объявления</label>
+                <input required type="text" name="title" class="form-control" id="Title" placeholder="Например: Починка рояля">
+            </div>
+            <div class="group-form my-3">
+                <label for="description">Описание</label>
+                <textarea required rows="5" class="form-control" name="description" id="description"></textarea>
+            </div>
+            <div class="group-form my-3">
+                <label for="price">Цена (рубли)</label>
+                <input required type="number" min="0" name="price" title="Используйте целые цифры" class="form-control" id="price">
+            </div>
+            <div class="form-group">
+                <label for="inputPhoto">
+                    Выберите фото
+                </label>
+                <input type="file" name="photo" class="form-control-file" id="inputPhoto"/>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block my-3">
+                Создать объявление
+            </button>
+        </form>
+    </div>
+</body>
+</html>

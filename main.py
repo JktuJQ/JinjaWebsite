@@ -1,13 +1,14 @@
 # Imports
 import sys
-from typing import *
+from declarations import *
+
+from routes import *
 
 
 # Main
 def main(argc: int, argv: List[str]):
-    from flask import Flask
-    application = Flask(__name__)
-    application.run(port=8080, host='127.0.0.1')
+    from application import run
+    run()
 
 
 if __name__ == '__main__':
