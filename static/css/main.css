@@ -1,3 +1,55 @@
+.container-m {
+  width: 100%;
+  max-width: 1024px;
+  min-width: 960px;
+}
+.main{
+  padding: 20 0px;
+}
+.headf {
+ background: #8b00ff;
+}
+.col-1-3-cars {
+  width: 27%;
+  float: left;
+  padding-right: 10%;
+}
+.col-1-3-pr {
+  width: 33%;
+  float: left;
+}
+.col-1-3-c {
+  width: 20%;
+  float: right;
+  padding-right: 10%;
+}
+.row {
+  padding: 10px;
+}
+.row-h {
+  padding: 5%;
+  height: 40 px
+}
+.row-sor {
+  max-width: 310px;
+}
+.rating-result {
+	width: 265px;
+}
+.rating-result span {
+	padding: 0;
+	font-size: 32px;
+	line-height: 1;
+	color: lightgrey;
+	text-shadow: 1px 1px #bbb;
+}
+.rating-result > span:before {
+	content: '★';
+}
+.rating-result > span.active {
+	color: gold;
+	text-shadow: 1px 1px #c60;
+}
 .rating-area {
 	overflow: hidden;
     display: flex;
@@ -96,4 +148,82 @@
 .rating-result > span.active {
 	color: gold;
 	text-shadow: 1px 1px #c60;
+}
+.col-1-7{
+  width: 165px;
+  height: 150px;
+  float: left;
+}
+.col-1-5{
+  width: 20%;
+  padding-left: 2%;
+  float: left;
+}
+.col-1-5-pr{
+  width: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.col-1-3-cars {
+  width: 27%;
+  float: left;
+  padding-right: 10%;
+}
+.col-1-3-pr {
+  width: 33%;
+  float: left;
+}
+.col-1-3-c {
+  width: 20%;
+  float: right;
+  padding-right: 10%;
+}
+.container23 {
+  width: 60%;
+  border: 2px solid #7000cc;
+  background: #8b00ff;
+  border-radius: 5%;
+}
+.container-123 {
+  padding: 45px;
+}
+.row-pre1{
+  border: 1px solid #7000cc;
+  border-radius: 5%;
+}
+.container-profile {
+  padding: 5%;
+}
+.prw {
+color:white;
+text-decoration:none
+}
+.prw:active {
+color:white;
+text-decoration:none
+}
+.prw:visited {
+color:white;
+text-decoration:none
+}
+.prw:hover {
+color:white;
+text-decoration: underline
+}
+.btn_btn {
+  background: #8b00ff
+}
+.email-profile {
+  color: #808080;
+  height: 15px;
+}
+.container-m1 {
+  width: 100%;
+  max-width: 1024px;
+  min-width: 960px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 5%;
+  border: 2px solid #8b00ff;
 }
