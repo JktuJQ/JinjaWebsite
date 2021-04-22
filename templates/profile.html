@@ -7,26 +7,36 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="profile4.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css') }}">
     <title>Zhinja</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#"><h2>Zhinja</h2></a>
-        <ul class="nav justify-content-right">
-            <li class="nav-item">
-                <a class="nav-link" href="#From_us" data-toggle="modal">О нас</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#Help" data-toggle="modal">Помощь</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
-            </li>
-        </ul>
-    </nav>
-    <div id="From_us" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
+        <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/"><h2>Zhinja</h2></a>
+             <ul class="nav justify-content-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="#From_us" data-toggle="modal">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#Help" data-toggle="modal">Помощь</a>
+                </li>
+                {%if data["registred"]%}
+                    <li class="nav-item">
+                        <div class="container">
+                            <div class="col-1-5">
+                                <a href="profile"><img src={{url_for('static', filename='images/' + data["user"]["image"])}} class="rounded-circle z-depth-0" alt="avatar image" height="50" width="50" border-radius="50%"></a>
+                            </div>
+                        </div>
+                    </li>
+                {%else%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
+                    </li>
+                {%endif%}
+            </ul>
+        </nav>
+        <div id="From_us" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -35,21 +45,21 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <h2>Добро пожаловать на сайт</h2>
-                    <p>Продукт от WildBugs.inc</p>
-                    <img src="ic.png" class="d-block w-100" alt="WILDBUGS">
-                    <p>Мы, юные разработчики, постигающие мир IT-технологий.
-                        Основная наша цель - достичь уровня достойных специалистов.
-                        Этот сайт один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
-                </div>
+            <div class="modal-body">
+                <h2>Добро пожаловать на сайт</h2>
+                <p>Продукт от WildBugs.inc</p>
+                <img src="ic.png" class="d-block w-100" alt="WILDBUGS">
+                <p>Мы, юные разработчики, постигающие мир IT-технологий.
+                Основная наша цель - достичь уровня достойных специалистов.
+                Этот сайт один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+            </div>
             </div>
         </div>
     </div>
-    <div id="Help" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle4" aria-hidden="true">
+        <div id="Help" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle4" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -58,15 +68,17 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+            <div class="modal-body">
                 </div>
                 <p>В настоящее время сайт находится в разработке, если возникнуть проблемы
-                    или предложения, пишите, пожалуйста, на электронную почту:</p>
+                или предложения, пишите, пожалуйста, на электронную почту:</p>
+                <center>
                 <h2>zhinja@yandex.ru</h2>
-                <p>C уважением команда WildBugs</p>
+                <p>C уважением, команда WildBugs</p>
+                </center>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
-                </div>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+            </div>
             </div>
         </div>
     </div>
@@ -79,37 +91,35 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="inputTel">
-                                Номер телефона
-                            </label>
-                            <input type="tel" name="tel" placeholder="89009009090" pattern="8[0-9]{10}"
-                                   class="form-control" id="inputTel"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword1">
-                                Пароль
-                            </label>
-                            <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                   id="inputPassword1"/>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">
-                            Войти
-                        </button>
-                    </form>
-                    <div class="modal-footer">
-                        <a class="nav-link" href="registration">Зарегистрироваться</a>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="inputTel">
+                            Номер телефона
+                        </label>
+                        <input type="tel" name="tel" placeholder="89009009090" pattern="8[0-9]{10}" class="form-control" id="inputTel"/>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="inputPassword1">
+                            Пароль
+                        </label>
+                        <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="inputPassword1"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Войти
+                    </button>
+                </form>
+            <div class="modal-footer">
+                <a class="nav-link" href="registration">Зарегистрироваться</a>
+            </div>
             </div>
         </div>
     </div>
-</header>
-<form class="headf">
-    <div class="container">
-        <div class="form-group">
+    </div>
+    </header>
+    <form class="headf">
+        <div class="container">
+            <div class="form-group">
             <div class="row-hea">
                 <div class="col-1-3">
                     <div class="row">
@@ -127,14 +137,14 @@
                 </div>
             </div>
         </div>
-    </div>
-</form>
+        </div>
+    </form>
 <div class="main">
     <div class="container-m mx-auto">
         <div class="container-profile">
             <div class="row">
                 <div class="col-1-7">
-                    <img src="royal.png" class="rounded-circle z-depth-0" alt="avatar image" height="150" width="150"
+                    <img src={{url_for('static', filename='images/' + data["user"]["image"])}} class="rounded-circle z-depth-0" alt="avatar image" height="150" width="150"
                          border-radius="50%">
                 </div>
                 <div class="col-1-5">
@@ -206,16 +216,11 @@
                 </div>
             </div>
             <div class="col-1-3-pr">
-                <a href="http://site.ru"><h3>{{item["name"]}}</h3></a>
-                <p>Рейтинг продавца:</p>
-                <div class="rating-result">
-                    {% for i in range(round(data["user"]["average_rating"])) %}
-                    <span class="active"></span>
-                    {% endfor %}
-                    {% for i in range(5 - round(data["user"]["average_rating"])) %}
-                    <span></span>
-                    {% endfor %}
-                </div>
+                <a href="/service/{{item["id"]}}"><h3>{{item["name"]}}</h3></a>
+            </div>
+            <div class="col-1-3_c">
+                <h3>{{item["price"]}} руб.</h3>
+            </div>
             </div>
         </div>
         {% endfor %}

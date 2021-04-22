@@ -13,9 +13,9 @@
     <title>Жынжа</title>
   </head>
   <body>
-    <header>
+        <header>
         <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#"><h2>Zhinja</h2></a>
+        <a class="navbar-brand" href="/"><h2>Zhinja</h2></a>
              <ul class="nav justify-content-right">
                 <li class="nav-item">
                     <a class="nav-link" href="#From_us" data-toggle="modal">О нас</a>
@@ -23,9 +23,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#Help" data-toggle="modal">Помощь</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
-                </li>
+                {%if data["registred"]%}
+                    <li class="nav-item">
+                        <div class="container">
+                            <div class="col-1-5">
+                                <a href="profile"><img src={{url_for('static', filename='images/' + data["user"]["image"])}} class="rounded-circle z-depth-0" alt="avatar image" height="50" width="50" border-radius="50%"></a>
+                            </div>
+                        </div>
+                    </li>
+                {%else%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
+                    </li>
+                {%endif%}
             </ul>
         </nav>
         <div id="From_us" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
@@ -64,8 +74,10 @@
                 </div>
                 <p>В настоящее время сайт находится в разработке, если возникнуть проблемы
                 или предложения, пишите, пожалуйста, на электронную почту:</p>
+                <center>
                 <h2>zhinja@yandex.ru</h2>
-                <p>C уважением команда WildBugs</p>
+                <p>C уважением, команда WildBugs</p>
+                </center>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
             </div>
@@ -82,7 +94,7 @@
                     </button>
                 </div>
             <div class="modal-body">
-                <form method="post">
+                <form>
                     <div class="form-group">
                         <label for="inputTel">
                             Номер телефона
@@ -109,15 +121,24 @@
     </header>
     <form class="headf">
         <div class="container">
+            <div class="form-group">
             <div class="row-hea">
                 <div class="col-1-3">
-                    <div class="input-group">
-                    <input type="search" class="form-control rounded my-5 ml-5" placeholder="Поиск объявлений" aria-label="Search"
-                        aria-describedby="search-addon" />
-                    <button type="button" class="btn btn-primary my-5 mr-5">Найти</button>
+                    <div class="row">
+                        <div class="col-11" style="padding-right: 0">
+                            <div class="input-group">
+                                <input type="search" class="form-control rounded my-5" placeholder="Поиск объявлений"
+                                       aria-label="Search"
+                                       aria-describedby="search-addon" name="search_label"/>
+                            </div>
+                        </div>
+                        <div class="col-1" style="padding-left: 0">
+                            <button type="button" class="btn btn-primary my-5">Найти</button>
+                        </div>
                     </div>
                 </div>
-                </div>
+            </div>
+        </div>
         </div>
     </form>
     <div class="container-fluid" style="max-width: 1600px">
@@ -173,7 +194,7 @@
                                 {% for comment in data["service"]["comments"]%}
                                     <li class="media mt-5">
                                         <div class="media-left text-center">
-                                            <a href='{{ comment["author"]["id"] }}'>
+                                            <a href='/profile/{{ comment["author"]["id"] }}'>
                                                 <div class="author" style="max-width: 150px">
                                                     <h3>{{ comment["author"]["name"] }}</h3>
                                                 </div>
@@ -238,7 +259,7 @@
                 <div class="row my-3">
                     <div class="col-md-12">
                         <a href='tel: {{ data["service"]["author"]["phone"] }}'>
-                            <button type="button" class="btn btn-success">
+                            <button type="button" class="btn btn-success btn-block">
                                 Позвонить {{ data["service"]["author"]["phone"] }}
                             </button>
                         </a>
@@ -252,7 +273,7 @@
                 <div class="media my-5" id="seller">
                     <img class="mr-3" alt="seller image" src="{{ url_for('static', filename='images/' + data['service']['author']['name']) }}" />
                     <div class="media-body">
-                        <a class="mt-0" role="link" href='{{ data["service"]["author"]["name"] }}'>
+                        <a class="mt-0" role="link" href='/profile/{{ data["service"]["author"]["id"] }}'>
                             <h4>
                                 {{ data["service"]["author"]["name"] }}
                             </h4>
