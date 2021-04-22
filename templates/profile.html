@@ -134,8 +134,8 @@
                         <img src="royal.png" class="rounded-circle z-depth-0" alt="avatar image" height="150" width="150" border-radius="50%">
                     </div>
                     <div class="col-1-5">
-                        <h1>{%{profile_name}%}</h1>
-                        <p class="email-profile">{%{profile_number}%}</p>
+                        <h1>{{profile_name}}</h1>
+                        <p class="email-profile">{{profile_number}}</p>
                     </div>
                 </div>
             </div>
@@ -212,6 +212,7 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

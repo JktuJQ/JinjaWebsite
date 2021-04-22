@@ -43,7 +43,44 @@ def base():
 
 @application.route('/profile/<int:user_id>', methods=["GET"])
 def profile(user_id: int):
-    return render_template("profile.html")
+    session = sessions["main_database"]
+
+    user = session.query(User).filter(User.id == user_id).first()
+    services = session.query(Service).filter(Service.user_id == user_id).all()
+
+    data = {
+        "registered": cookie.get("id") is not None,
+        "user": {
+            "id": user_id,
+            "phone": user.phone
+        },
+        "services": []
+    }
+
+    for service in services:
+        description = session.query(Description).filter(Description.id == service.description_id).first()
+        images = session.query(Images).filter(Images.out_id == description.images_id).all()
+
+        service_comments = session.query(Comment) \
+            .filter((Comment.service_id == service.id)).all()
+
+        data["services"].append({
+            "id": service.id,
+            "name": service.name,
+            "price": service.price,
+            "description": {
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
+                "description": {
+                    "impression": description.description.split(delimiter)[0],
+                    "pluses": description.description.split(delimiter)[1],
+                    "minuses": description.description.split(delimiter)[2],
+                    "comment": description.description.split(delimiter)[3]
+                },
+            },
+            "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
+        })
+
+    return render_template("profile.html", data=data, len=len, round=round)
 
 
 @application.route('/service/<int:service_id>', methods=["GET"])
