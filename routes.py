@@ -1,10 +1,17 @@
 from declarations import *
-from application import application, redirect, render_template, request, cookie
+from application import application, Response, redirect, render_template, request, cookie
 
 
 @application.route('/', methods=["GET", "POST"])
 def base():
     """Website home page"""
+
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User)\
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect('/')
 
     global searcher
 
@@ -52,9 +59,17 @@ def base():
     return render_template("base.html", data=data, len=len, round=round)
 
 
-@application.route('/profile/<int:user_id>/', methods=["GET"])
-@application.route('/profile/<int:user_id>/<string:type>', methods=["GET"])
+@application.route('/profile/<int:user_id>/', methods=["GET", "POST"])
+@application.route('/profile/<int:user_id>/<string:type>', methods=["GET", "POST"])
 def profile(user_id: int, type: str = "services"):
+
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User)\
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect('/')
+
     session = sessions["main_database"]
 
     user = session.query(User).filter(User.id == user_id).first()
@@ -131,6 +146,14 @@ def profile(user_id: int, type: str = "services"):
 
 @application.route('/service/<int:service_id>', methods=["GET"])
 def service(service_id: int):
+
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User)\
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect('/')
+
     session = sessions["main_database"]
 
     service = session.query(Service) \
@@ -218,7 +241,7 @@ def registration():
         try:
             session = sessions["main_database"]
 
-            last_out_id = max([image.out_id for image in session.query(Images).all()]) + 1
+            last_out_id = max([user.image_id for user in session.query(User).all()]) + 1
             image = Images(out_id=last_out_id, image=bytes(image.read()))
             user = User(phone=phone, password=password, name=name, image_id=image.out_id)
             user_id = user.id
@@ -230,7 +253,6 @@ def registration():
             return redirect('/registration')
 
         cookie["id"] = user_id
-        cookie["hash"] = user_hash
 
         return redirect('/')
 
@@ -253,7 +275,7 @@ def create_service():
 
             user_id = cookie["id"]
 
-            last_out_id = max([image.out_id for image in session.query(Images).all()]) + 1
+            last_out_id = max([user.image_id for user in session.query(User).all()]) + 1
 
             image = Images(out_id=last_out_id, image=bytes(image.read()))
             description = Description(description=description, images_id=image.out_id)

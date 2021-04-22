@@ -80,7 +80,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method="post">
                         <div class="form-group">
                             <label for="inputTel">
                                 Номер телефона
@@ -93,21 +93,21 @@
                                 Пароль
                             </label>
                             <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                   id="inputPassword1"/>
+                                   id="inputPassword1" name="password"/>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">
                             Войти
                         </button>
                     </form>
                     <div class="modal-footer">
-                        <a class="nav-link" href="registration">Зарегистрироваться</a>
+                        <a class="nav-link" href="/registration">Зарегистрироваться</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </header>
-<form class="headf">
+<form class="headf" method="post">
     <div class="container">
         <div class="form-group">
             <div class="row-hea">
@@ -116,12 +116,13 @@
                         <div class="col-11" style="padding-right: 0">
                             <div class="input-group">
                                 <input type="search" class="form-control rounded my-5" placeholder="Поиск объявлений"
+                                       name="search"
                                        aria-label="Search"
                                        aria-describedby="search-addon" name="search_label"/>
                             </div>
                         </div>
                         <div class="col-1" style="padding-left: 0">
-                            <button type="button" class="btn btn-primary my-5">Найти</button>
+                            <button type="submit" class="btn btn-primary my-5">Найти</button>
                         </div>
                     </div>
                 </div>
