@@ -142,9 +142,9 @@
             <div class="container-pr">
                 <div class="row">
                     <center>
-                    <a type="submit" class="btn btn-secondary" href="my_ad">Мои объявления</a>
-                            <a type="submit" class="btn btn-secondary" href="add_ad">Добавить объявление</a>
-                            <a type="submit" class="btn btn-secondary" href="comments">Отзывы о пользователе</a>
+                    <a type="submit" class="btn btn-secondary" href="services">Объявления пользователя</a>
+                            <a type="submit" class="btn btn-secondary" href="create_service">Добавить объявление</a>
+                            <a type="submit" class="btn btn-secondary" href="comment">Отзывы о пользователе</a>
                             <a type="submit" class="btn btn-secondary" href="rating">Рейтинг пользователя</a>
                    </center>
                 </div>
@@ -161,7 +161,7 @@
         </div>
       </div>
     </div>
-    {%{for item in profile["comments"]}%}
+    {% for item in data["comments"] %}
     <div class="container-m1 mx-auto">
         <div class="comments">
             <ul class="media-list">
@@ -169,7 +169,7 @@
                     <div class="media-left text-center">
                         <a href="#">
                             <div class="author" style="max-width: 150px">
-                                <h3>{%{item["author"]}%}</h3>
+                                <h3>{{item["author"]["id"]}}</h3>
                             </div>
                             <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="../new_profile_form/royal.png">
                         </a>
@@ -178,14 +178,14 @@
                         <div class="media-left">
                             <div class="row">
                                 <div class="col-8">
-                                    <h2>{%{item["first_estimation"]}%}</h2>
+                                    <h2>{{ item["description"]["description"]["impression"] }}</h2>
                                 </div>
                                 <div class="col-4">
                                     <div class="rating-result">
-                                        {% for i in range(round(item["average_rating"])) %}
+                                        {% for i in range(round(item["rating"])) %}
                                         <span class="active"></span>
                                         {% endfor %}
-                                        {% for i in range(5 - round(item["average_rating"])) %}
+                                        {% for i in range(5 - round(item["rating"])) %}
                                         <span></span>
                                         {% endfor %}
                                     </div>
@@ -198,25 +198,26 @@
                                 Достоинства:
                             </h3>
                             <p>
-                                {%{item["dignities"]}%}
+                                {{item["description"]["description"]["pluses"]}}
                             </p>
                             <h3 class="my-2">
                                 Недостатки:
                             </h3>
                             <p>
-                                {%{item["disadvantages"]}%}
+                                {{item["description"]["description"]["minuses"]}}
                             </p>
                             <h3 class="my-2">
                                 Комментарий:
                             </h3>
                             <p>
-                                {%{item["comment"]}%}
+                                {{item["description"]["description"]["comment"]}}
                             </p>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
+    {% endfor %}
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

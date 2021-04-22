@@ -41,28 +41,35 @@ def base():
     return render_template("base.html", data=data, len=len, round=round)
 
 
-@application.route('/profile/<int:user_id>', methods=["GET"])
-def profile(user_id: int):
+@application.route('/profile/<int:user_id>/', methods=["GET"])
+@application.route('/profile/<int:user_id>/<string:type>', methods=["GET"])
+def profile(user_id: int, type: str = "services"):
     session = sessions["main_database"]
 
     user = session.query(User).filter(User.id == user_id).first()
+    user_image = session.query(Images).filter(Images.out_id == user.image_id).first()
+
     services = session.query(Service).filter(Service.user_id == user_id).all()
 
     data = {
         "registered": cookie.get("id") is not None,
         "user": {
             "id": user_id,
-            "phone": user.phone
+            "name": user.name,
+            "image": str(buffer_image(user_image.id, user_image.image)) + ".png",
+            "phone": user.phone,
+            "average_rating": 0
         },
-        "services": []
+        "services": [],
+        "comments": []
     }
 
     for service in services:
         description = session.query(Description).filter(Description.id == service.description_id).first()
         images = session.query(Images).filter(Images.out_id == description.images_id).all()
 
-        service_comments = session.query(Comment) \
-            .filter((Comment.service_id == service.id)).all()
+        service_comments = session.query(Comment, Description) \
+            .filter((Comment.service_id == service.id), (Description.id == Comment.description_id)).all()
 
         data["services"].append({
             "id": service.id,
@@ -77,10 +84,41 @@ def profile(user_id: int):
                     "comment": description.description.split(delimiter)[3]
                 },
             },
-            "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
         })
 
-    return render_template("profile.html", data=data, len=len, round=round)
+        for comment, description in service_comments:
+            author = session.query(User).filter(User.id == comment.user_id).first()
+            author_image = session.query(Images).filter(Images.out_id == author.image_id).first()
+            data["comments"].append({
+                "id": comment.id,
+                "author": {
+                    "id": author.id,
+                    "name": author.name,
+                    "image": str(buffer_image(author_image.id, author_image.image)) + ".png"
+                },
+                "description": {
+                    "images": [str(buffer_image(image.id, image.image)) + ".png" for image in
+                               session.query(Images).filter(Images.id == description.images_id).all()],
+                    "description": {
+                        "impression": description.description.split(delimiter)[0],
+                        "pluses": description.description.split(delimiter)[1],
+                        "minuses": description.description.split(delimiter)[2],
+                        "comment": description.description.split(delimiter)[3]
+                    }
+                },
+                "rating": comment.rating
+            })
+            data["user"]["average_rating"] += comment.rating
+    data["user"]["average_rating"] /= len(data["comments"])
+
+    if type == "services":
+        return render_template("profile.html", data=data, len=len, round=round)
+    elif type == "create_service":
+        return redirect('/create_service')
+    elif type == "comment":
+        return render_template("profile_comment.html", data=data, len=len, round=round)
+    elif type == "rating":
+        return render_template("profile_rating.html", data=data, len=len, round=round)
 
 
 @application.route('/service/<int:service_id>', methods=["GET"])
@@ -225,7 +263,7 @@ def create_service():
         return redirect('/')
 
 
-@application.route('/comment/<int:service_id>', methods=["GET", "POST"])
+@application.route('/create_comment/<int:service_id>', methods=["GET", "POST"])
 def create_comment(service_id: int):
 
     if request.method == "GET":
