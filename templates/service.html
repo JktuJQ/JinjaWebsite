@@ -136,7 +136,7 @@
                             <div class="carousel-inner">
                                 {% for image in data['service']['comments']['description']['images'] %}
                                     <div class="carousel-item active">
-                                        <img class="d-block" alt="image" src="{{ url_for('static', filename='img/' + image) }}" />
+                                        <img class="d-block" alt="image" src="{{ url_for('static', filename='images/' + image) }}" />
                                     </div>
                                 {% endfor %}
                             </div>
@@ -177,7 +177,7 @@
                                                 <div class="author" style="max-width: 150px">
                                                     <h3>{{ comment["author"]["name"] }}</h3>
                                                 </div>
-                                                <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="{{ url_for('static', filename='img/' + comment['author']['image']) }}">
+                                                <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="{{ url_for('static', filename='images/' + comment['author']['image']) }}">
                                             </a>
                                         </div>
                                         <div class="media-body ml-5 mr-5">
@@ -250,7 +250,7 @@
                     </div>
                 </div>
                 <div class="media my-5" id="seller">
-                    <img class="mr-3" alt="seller image" src="{{ url_for('static', filename='img/' + data['service']['author']['name']) }}" />
+                    <img class="mr-3" alt="seller image" src="{{ url_for('static', filename='images/' + data['service']['author']['name']) }}" />
                     <div class="media-body">
                         <a class="mt-0" role="link" href='{{ data["service"]["author"]["name"] }}'>
                             <h4>
