@@ -63,7 +63,7 @@ def profile(user_id: int, type: str = "services"):
     services = session.query(Service).filter(Service.user_id == user_id).all()
 
     data = {
-        "registered": cookie.get("id") is not None,
+        "registered": cookie.get("id") == user_id,
         "user": {
             "id": user_id,
             "name": user.name,
@@ -213,11 +213,14 @@ def registration():
         phone = request.form.get("phone")
         name = " ".join([request.form.get("surname"), request.form.get("name")])
         password = request.form.get("password")
-        image = str(request.files["file"].read())
+        image = request.files["file"]
 
         try:
             session = sessions["main_database"]
-            user = User(phone=phone, password=password, name=name, image=image)
+
+            last_out_id = max([image.out_id for image in session.query(Images).all()]) + 1
+            image = Images(out_id=last_out_id, image=bytes(image.read()))
+            user = User(phone=phone, password=password, name=name, image_id=image.out_id)
             user_id = user.id
             user_hash = hash((phone, password))
             session.add(user)
