@@ -53,7 +53,7 @@ def base():
                     "comment": description.description
                 },
             },
-            "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
+            "average_rating": sum([comment.rating for comment in service_comments]) / (len(service_comments) if len(service_comments) else 1)
         })
 
     return render_template("base.html", data=data, len=len, round=round)
@@ -132,7 +132,11 @@ def profile(user_id: int, type: str = "services"):
                 "rating": comment.rating
             })
             data["user"]["average_rating"] += comment.rating
-    data["user"]["average_rating"] /= len(data["comments"])
+
+    try:
+        data["user"]["average_rating"] /= len(data["comments"])
+    except ZeroDivisionError:
+        data["user"]["average_rating"] = 5
 
     if type == "services":
         return render_template("profile.html", data=data, len=len, round=round)
@@ -144,15 +148,17 @@ def profile(user_id: int, type: str = "services"):
         return render_template("profile_rating.html", data=data, len=len, round=round)
 
 
-@application.route('/service/<int:service_id>', methods=["GET"])
+@application.route('/service/<int:service_id>', methods=["GET", "POST"])
 def service(service_id: int):
 
     if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
         user = sessions["main_database"].query(User)\
             .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
         if user:
+            print("registered")
             cookie["id"] = user.id
-            return redirect('/')
+            print("TRUEW")
+            return redirect(f'/profile/{user.id}')
 
     session = sessions["main_database"]
 
@@ -173,6 +179,7 @@ def service(service_id: int):
         .filter((Comment.service_id == service.id), (Description.id == Comment.description_id)).all()
 
     data = {
+        "registered": False,
         "service": {
             "author": {
                 "id": service_author.id,
@@ -220,7 +227,7 @@ def service(service_id: int):
             "rating": comment.rating
         })
         average_rating += comment.rating
-    data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"])
+    data["service"]["author"]["average_rating"] = average_rating / (len(data["service"]["comments"]) if len(data["service"]["comments"]) else 1)
 
     return render_template("service.html", data=data)
 
@@ -237,18 +244,20 @@ def registration():
         name = " ".join([request.form.get("surname"), request.form.get("name")])
         password = request.form.get("password")
         image = request.files["file"]
+        print(image)
 
         try:
             session = sessions["main_database"]
 
             last_out_id = max([user.image_id for user in session.query(User).all()]) + 1
-            image = Images(out_id=last_out_id, image=bytes(image.read()))
+            image = Images(id=max([image.id for image in session.query(Images).all()]) + 1, out_id=last_out_id, image=bytes(image.read()))
             user = User(phone=phone, password=password, name=name, image_id=image.out_id)
             user_id = user.id
             user_hash = hash((phone, password))
+            session.add(image)
             session.add(user)
             session.commit()
-        except Exception:
+        except Exception as e:
             # TODO alarm box
             return redirect('/registration')
 
@@ -277,8 +286,9 @@ def create_service():
 
             last_out_id = max([user.image_id for user in session.query(User).all()]) + 1
 
-            image = Images(out_id=last_out_id, image=bytes(image.read()))
-            description = Description(description=description, images_id=image.out_id)
+            image = Images(id=max([image.id for image in session.query(Images).all()]) + 1, out_id=last_out_id, image=bytes(image.read()))
+            description = Description(id=max([image.id for image in session.query(Description).all()]) + 1, description=description, images_id=image.out_id)
+            print(description.id)
             service = Service(user_id=user_id, name=title, description_id=description.id, price=price)
 
             session.add(image)
