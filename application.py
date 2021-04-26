@@ -1,4 +1,5 @@
-from flask import Flask, render_template, redirect, request, session as cookie
+from declarations import *
+from flask import Flask, Response, render_template, redirect, request, session as cookie
 
 
 application = Flask(__name__)

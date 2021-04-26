@@ -1,25 +1,46 @@
 from declarations import *
-from application import application, redirect, render_template, request, cookie
+from application import application, Response, redirect, render_template, request, cookie
 
 
-@application.route('/', methods=["GET"])
+@application.route('/', methods=["GET", "POST"])
 def base():
     """Website home page"""
+
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User) \
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect(f'/profile/{user.id}')
+
+    global searcher
 
     session = sessions["main_database"]
 
     services = session.query(Service).all()
+
+    searched = request.form.get("search_label")
+    if searched:
+        reload_document(services)
+
+        searcher = ix.searcher()
+        query = QueryParser("content", ix.schema).parse(searched)
+        search_result = list(searcher.search(query))
+        if not search_result:
+            services = list(filter(lambda x: searched in x.name, services))
+        else:
+            services_id = [int(hit["id"]) for hit in search_result]
+            services = list(filter(lambda x: x.id in services_id, services))
 
     data = {
         "services": []
     }
 
     for service in services:
-
         description = session.query(Description).filter(Description.id == service.description_id).first()
         images = session.query(Images).filter(Images.out_id == description.images_id).all()
 
-        service_comments = session.query(Comment)\
+        service_comments = session.query(Comment) \
             .filter((Comment.service_id == service.id)).all()
 
         data["services"].append({
@@ -29,22 +50,31 @@ def base():
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
                 "description": {
-                    "impression": description.description.split(delimiter)[0],
-                    "pluses": description.description.split(delimiter)[1],
-                    "minuses": description.description.split(delimiter)[2],
-                    "comment": description.description.split(delimiter)[3]
+                    "comment": description.description
                 },
             },
-            "average_rating": sum([comment.rating for comment in service_comments]) / len(service_comments)
+            "average_rating": sum([comment.rating for comment in service_comments]) / (
+                len(service_comments) if len(service_comments) else 1)
         })
 
     return render_template("base.html", data=data, len=len, round=round)
 
 
-@application.route('/profile/<int:user_id>/', methods=["GET"])
-@application.route('/profile/<int:user_id>/<string:type>', methods=["GET"])
+@application.route('/profile/<int:user_id>/', methods=["GET", "POST"])
+@application.route('/profile/<int:user_id>/<string:type>', methods=["GET", "POST"])
 def profile(user_id: int, type: str = "services"):
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User) \
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect(f'/profile/{user.id}')
+
     session = sessions["main_database"]
+
+    searched = request.form.get("search_label")
+    if searched:
+        return redirect('/')
 
     user = session.query(User).filter(User.id == user_id).first()
     user_image = session.query(Images).filter(Images.out_id == user.image_id).first()
@@ -52,7 +82,7 @@ def profile(user_id: int, type: str = "services"):
     services = session.query(Service).filter(Service.user_id == user_id).all()
 
     data = {
-        "registered": cookie.get("id") is not None,
+        "registered": cookie.get("id") == user_id,
         "user": {
             "id": user_id,
             "name": user.name,
@@ -78,10 +108,7 @@ def profile(user_id: int, type: str = "services"):
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in images],
                 "description": {
-                    "impression": description.description.split(delimiter)[0],
-                    "pluses": description.description.split(delimiter)[1],
-                    "minuses": description.description.split(delimiter)[2],
-                    "comment": description.description.split(delimiter)[3]
+                    "comment": description.description
                 },
             },
         })
@@ -109,7 +136,11 @@ def profile(user_id: int, type: str = "services"):
                 "rating": comment.rating
             })
             data["user"]["average_rating"] += comment.rating
-    data["user"]["average_rating"] /= len(data["comments"])
+
+    try:
+        data["user"]["average_rating"] /= len(data["comments"])
+    except ZeroDivisionError:
+        data["user"]["average_rating"] = 5
 
     if type == "services":
         return render_template("profile.html", data=data, len=len, round=round)
@@ -121,27 +152,39 @@ def profile(user_id: int, type: str = "services"):
         return render_template("profile_rating.html", data=data, len=len, round=round)
 
 
-@application.route('/service/<int:service_id>', methods=["GET"])
+@application.route('/service/<int:service_id>', methods=["GET", "POST"])
 def service(service_id: int):
+    if request.method == "POST" and request.form.get("tel") and request.form.get("password"):
+        user = sessions["main_database"].query(User) \
+            .filter(User.phone == request.form.get("tel"), User.password == request.form.get("password")).first()
+        if user:
+            cookie["id"] = user.id
+            return redirect(f'/profile/{user.id}')
+
     session = sessions["main_database"]
 
-    service = session.query(Service)\
+    searched = request.form.get("search_label")
+    if searched:
+        return redirect('/')
+
+    service = session.query(Service) \
         .filter(Service.id == service_id).first()
 
-    service_author = session.query(User)\
+    service_author = session.query(User) \
         .filter(User.id == service.user_id).first()
-    service_author_image = session.query(Images)\
+    service_author_image = session.query(Images) \
         .filter(Images.out_id == service_author.image_id).first()
 
-    service_description = session.query(Description)\
+    service_description = session.query(Description) \
         .filter(Description.id == service.description_id).first()
-    service_description_images = session.query(Images)\
+    service_description_images = session.query(Images) \
         .filter(Images.out_id == service_description.images_id).all()
 
-    service_comments = session.query(Comment, Description)\
+    service_comments = session.query(Comment, Description) \
         .filter((Comment.service_id == service.id), (Description.id == Comment.description_id)).all()
 
     data = {
+        "registered": False,
         "service": {
             "author": {
                 "id": service_author.id,
@@ -157,10 +200,7 @@ def service(service_id: int):
             "description": {
                 "images": [str(buffer_image(image.id, image.image)) + ".png" for image in service_description_images],
                 "description": {
-                    "impression": service_description.description.split(delimiter)[0],
-                    "pluses": service_description.description.split(delimiter)[1],
-                    "minuses": service_description.description.split(delimiter)[2],
-                    "comment": service_description.description.split(delimiter)[3]
+                    "comment": service_description.description
                 },
             },
             "comments": []
@@ -180,7 +220,8 @@ def service(service_id: int):
                 "image": str(buffer_image(author_image.id, author_image.image)) + ".png"
             },
             "description": {
-                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in session.query(Images).filter(Images.id == description.images_id).all()],
+                "images": [str(buffer_image(image.id, image.image)) + ".png" for image in
+                           session.query(Images).filter(Images.id == description.images_id).all()],
                 "description": {
                     "impression": description.description.split(delimiter)[0],
                     "pluses": description.description.split(delimiter)[1],
@@ -191,7 +232,8 @@ def service(service_id: int):
             "rating": comment.rating
         })
         average_rating += comment.rating
-    data["service"]["author"]["average_rating"] = average_rating / len(data["service"]["comments"])
+    data["service"]["author"]["average_rating"] = average_rating / (
+        len(data["service"]["comments"]) if len(data["service"]["comments"]) else 1)
 
     return render_template("service.html", data=data)
 
@@ -207,28 +249,29 @@ def registration():
         phone = request.form.get("phone")
         name = " ".join([request.form.get("surname"), request.form.get("name")])
         password = request.form.get("password")
-        image = str(request.files["file"].read())
+        image = request.files["file"]
 
         try:
             session = sessions["main_database"]
-            user = User(phone=phone, password=password, name=name, image=image)
+
+            image = Images(id=max([elem.id for elem in session.query(Images).all()]) + 1, out_id=max([elem.out_id for elem in session.query(Images).all()]) + 1,
+                           image=bytes(image.read()))
+            user = User(phone=phone, password=password, name=name, image_id=image.out_id)
             user_id = user.id
-            user_hash = hash((phone, password))
+
+            session.add(image)
             session.add(user)
             session.commit()
         except Exception:
-            # TODO alarm box
             return redirect('/registration')
 
         cookie["id"] = user_id
-        cookie["hash"] = user_hash
 
         return redirect('/')
 
 
 @application.route('/create_service', methods=["GET", "POST"])
 def create_service():
-
     if request.method == "GET":
         return render_template("create_service.html")
 
@@ -245,10 +288,10 @@ def create_service():
 
             user_id = cookie["id"]
 
-            last_out_id = max([image.out_id for image in session.query(Images).all()]) + 1
-
-            image = Images(out_id=last_out_id, image=bytes(image.read()))
-            description = Description(description=description, images_id=image.out_id)
+            image = Images(id=max([elem.id for elem in session.query(Images).all()]) + 1, out_id=max([elem.out_id for elem in session.query(Images).all()]) + 1,
+                           image=bytes(image.read()))
+            description = Description(id=max([elem.id for elem in session.query(Description).all()]) + 1,
+                                      description=description, images_id=image.out_id)
             service = Service(user_id=user_id, name=title, description_id=description.id, price=price)
 
             session.add(image)
@@ -265,7 +308,6 @@ def create_service():
 
 @application.route('/create_comment/<int:service_id>', methods=["GET", "POST"])
 def create_comment(service_id: int):
-
     if request.method == "GET":
         return render_template("create_comment.html")
 
@@ -282,15 +324,15 @@ def create_comment(service_id: int):
 
             user_id = cookie["id"]
 
-            description = Description(description=delimiter.join((impression, pluses, minuses, comment)))
-            comment = Comment(user_id=user_id, service_id=service_id, description_id=description.id, rating=rating)
+            description = Description(id=max([elem.id for elem in session.query(Description).all()]) + 1, description=delimiter.join((impression, pluses, minuses, comment)))
+            comment = Comment(id=max([elem.id for elem in session.query(Description).all()]) + 1, user_id=user_id, service_id=service_id, description_id=description.id, rating=rating)
 
             session.add(description)
             session.add(comment)
 
             session.commit()
 
-        except Exception:
+        except Exception as e:
             return redirect('/')
 
         return redirect('/')
