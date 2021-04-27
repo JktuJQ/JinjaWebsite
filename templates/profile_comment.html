@@ -6,13 +6,13 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="profile4.css">
+    <link rel="stylesheet" type="text/css" href={{url_for('static', filename='css/main.css') }}>
     <title>Zhinja</title>
   </head>
   <body>
-    <header>
+   <header>
         <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#"><h2>Zhinja</h2></a>
+        <a class="navbar-brand" href="/"><h2>Zhinja</h2></a>
              <ul class="nav justify-content-right">
                 <li class="nav-item">
                     <a class="nav-link" href="#From_us" data-toggle="modal">О нас</a>
@@ -20,9 +20,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#Help" data-toggle="modal">Помощь</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
-                </li>
+                {%if data["registred"]%}
+                    <li class="nav-item">
+                        <div class="container">
+                            <div class="col-1-5">
+                                <a href="profile"><img src={{url_for('static', filename='images/' + data["user"]["image"])}} class="rounded-circle z-depth-0" alt="avatar image" height="50" width="50" border-radius="50%"></a>
+                            </div>
+                        </div>
+                    </li>
+                {%else%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Reg" data-toggle="modal">Войти/Зарегистрироваться</a>
+                    </li>
+                {%endif%}
             </ul>
         </nav>
         <div id="From_us" class="modal" tabindex="-1" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
@@ -61,8 +71,10 @@
                 </div>
                 <p>В настоящее время сайт находится в разработке, если возникнуть проблемы
                 или предложения, пишите, пожалуйста, на электронную почту:</p>
+                <center>
                 <h2>zhinja@yandex.ru</h2>
-                <p>C уважением команда WildBugs</p>
+                <p>C уважением, команда WildBugs</p>
+                </center>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
             </div>
@@ -97,7 +109,7 @@
                     </button>
                 </form>
             <div class="modal-footer">
-                <a class="nav-link" href="registration">Зарегистрироваться</a>
+                <a class="nav-link" href="/registration">Зарегистрироваться</a>
             </div>
             </div>
         </div>
@@ -131,29 +143,32 @@
             <div class="container-profile">
                 <div class="row">
                     <div class="col-1-7">
-                        <img src="royal.png" class="rounded-circle z-depth-0" alt="avatar image" height="150" width="150" border-radius="50%">
+                        <img src={{url_for('static', filename='images/' + data["user"]["image"])}} class="rounded-circle z-depth-0" alt="avatar image" height="150" width="150" border-radius="50%">
                     </div>
                     <div class="col-1-5">
-                        <h1>Name</h1>
-                        <p class="email-profile">email@post-service</p>
+                        <h1>{{data["user"]["name"]}}</h1>
+                    <p class="email-profile">{{data["user"]["phone"]}}</p>
                     </div>
                 </div>
             </div>
             <div class="container-pr">
                 <div class="row">
                     <center>
-                    <a type="submit" class="btn btn-secondary" href="services">Объявления пользователя</a>
-                            <a type="submit" class="btn btn-secondary" href="create_service">Добавить объявление</a>
-                            <a type="submit" class="btn btn-secondary" href="comment">Отзывы о пользователе</a>
-                            <a type="submit" class="btn btn-secondary" href="rating">Рейтинг пользователя</a>
-                   </center>
-                </div>
-                      </div>
-                </div>
-
+                    <div class="col-md-4">
+                        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Панель инструментов с группами кнопок">
+                            <div class="btn-group mr-2" role="group" aria-label="First group">
+                                <a type="submit" class="btn btn-secondary" href="services">Объявления пользователя</a>
+                                <a type="submit" class="btn btn-secondary" href="create_service">Добавить объявление</a>
+                                <a type="submit" class="btn btn-secondary" href="comment">Отзывы о пользователе</a>
+                                <a type="submit" class="btn btn-secondary" href="rating">Рейтинг пользователя</a>
+                            </div>
+                        </div>
+                    </div>
+                </center>
                 </div>
             </div>
         </div>
+    </div>
     <div class="container-m mx-auto">
       <div class="row">
         <div class="col-1-3-cars">
@@ -165,13 +180,13 @@
     <div class="container-m1 mx-auto">
         <div class="comments">
             <ul class="media-list">
-                <ul class="media mt-5">
+                <li class="media mt-5">
                     <div class="media-left text-center">
-                        <a href="#">
+                        <a href="/profile/{{item["author"]["id"]}}">
                             <div class="author" style="max-width: 150px">
                                 <h3>{{item["author"]["id"]}}</h3>
                             </div>
-                            <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src="../new_profile_form/royal.png">
+                            <img class="media-object rounded-circle z-depth-0 my-2" alt="avatar image" height="150" width="150" src={{url_for('static', filename='images/' + data["user"]["image"])}}>
                         </a>
                     </div>
                     <div class="media-body ml-5 mr-5">
@@ -192,7 +207,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <div class="media-text col-12 text-justify">
                             <h3 class="my-2">
                                 Достоинства:
@@ -213,11 +227,12 @@
                                 {{item["description"]["description"]["comment"]}}
                             </p>
                         </div>
-                    </div>
+                        </div>
                 </li>
-            </ul>
+                {% endfor %}
+                </ul>
         </div>
-    {% endfor %}
+        </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
