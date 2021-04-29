@@ -47,10 +47,10 @@
             <div class="modal-body">
                 <h2>Добро пожаловать на сайт</h2>
                 <p>Продукт от WildBugs.inc</p>
-                <img src="ic.png" class="d-block w-100" alt="WILDBUGS">
+                <img src="{{url_for('static', filename='images/ic.png')}}" class="d-block w-100" alt="WILDBUGS">
                 <p>Мы, юные разработчики, постигающие мир IT-технологий.
                 Основная наша цель - достичь уровня достойных специалистов.
-                Этот сайт один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
+                Этот сайт - один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
@@ -91,7 +91,7 @@
                     </button>
                 </div>
             <div class="modal-body">
-                <form>
+                <form method="post">
                     <div class="form-group">
                         <label for="inputTel">
                             Номер телефона
@@ -102,7 +102,7 @@
                         <label for="inputPassword1">
                             Пароль
                         </label>
-                        <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="inputPassword1"/>
+                        <input type="password" name="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="inputPassword1"/>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">
                         Войти
@@ -176,10 +176,10 @@
         </div>
       </div>
     </div>
-    {% for item in data["comments"] %}
     <div class="container-m1 mx-auto">
         <div class="comments">
             <ul class="media-list">
+                {% for item in data["comments"] %}
                 <li class="media mt-5">
                     <div class="media-left text-center">
                         <a href="/profile/{{item["author"]["id"]}}">
@@ -231,7 +231,6 @@
                 </li>
                 {% endfor %}
                 </ul>
-        </div>
         </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

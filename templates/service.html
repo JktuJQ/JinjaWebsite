@@ -53,7 +53,7 @@
                 <img src="{{url_for('static', filename='images/ic.png')}}" class="d-block w-100" alt="WILDBUGS">
                 <p>Мы, юные разработчики, постигающие мир IT-технологий.
                 Основная наша цель - достичь уровня достойных специалистов.
-                Этот сайт один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
+                Этот сайт - один из наших проектов Yandex Lyceum, который помогает приблициться к нашей цели.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
@@ -94,7 +94,7 @@
                     </button>
                 </div>
             <div class="modal-body">
-                <form>
+                <form method="post">
                     <div class="form-group">
                         <label for="inputTel">
                             Номер телефона
@@ -271,7 +271,7 @@
                     </div>
                 </div>
                 <div class="media my-5" id="seller">
-                    <img class="mr-3" alt="seller image" src="{{ url_for('static', filename='images/' + data['service']['author']['name']) }}" />
+                    <img class="mr-3" alt="seller image" src="{{ url_for('static', filename='images/' + data['service']['author']['image']) }}" />
                     <div class="media-body">
                         <a class="mt-0" role="link" href='/profile/{{ data["service"]["author"]["id"] }}'>
                             <h4>
